@@ -58,9 +58,9 @@ func ShowTrainingInfo(action int, trainingType string, duration, weight, height 
 		calories := WalkingSpentCalories(action, duration, weight, height) // вызовите здесь необходимую функцию
 		return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", trainingType, duration, distance, speed, calories)
 	case trainingType == "Плавание":
-		distance := distance(action)                                   // вызовите здесь необходимую функцию
-		speed := meanSpeed(action, duration)                           // вызовите здесь необходимую функцию
-		calories := swimmingMeanSpeed(lengthPool, countPool, duration) // вызовите здесь необходимую функцию
+		distance := distance(action)                                               // вызовите здесь необходимую функцию
+		speed := swimmingMeanSpeed(lengthPool, countPool, duration)                // вызовите здесь необходимую функцию
+		calories := SwimmingSpentCalories(lengthPool, countPool, duration, weight) // вызовите здесь необходимую функцию
 		return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", trainingType, duration, distance, speed, calories)
 	default:
 		return "неизвестный тип тренировки"
@@ -83,7 +83,7 @@ const (
 func RunningSpentCalories(action int, weight, duration float64) float64 {
 	// ваш код здесь
 	runSpeed := meanSpeed(action, duration)
-	caloriesRun := ((runningCaloriesMeanSpeedMultiplier * runSpeed * runningCaloriesMeanSpeedShift) * weight / mInKm * duration * minInH)
+	caloriesRun := (runningCaloriesMeanSpeedMultiplier * runSpeed * runningCaloriesMeanSpeedShift) * weight / mInKm * duration * minInH
 	return caloriesRun
 }
 
@@ -104,7 +104,9 @@ const (
 func WalkingSpentCalories(action int, duration, weight, height float64) float64 {
 	// ваш код здесь
 	walkingSpeed := meanSpeed(action, duration)
-	squared := math.Pow(walkingSpeed, 2)
+	speedMS := walkingSpeed * kmhInMsec
+	squared := math.Pow(speedMS, 2)
+	height /= cmInM
 	caloriesWalking := (walkingCaloriesWeightMultiplier*weight + (squared/height)*walkingSpeedHeightMultiplier*weight) * duration * minInH
 	return caloriesWalking
 }
