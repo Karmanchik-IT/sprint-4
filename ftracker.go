@@ -2,6 +2,7 @@ package ftracker
 
 import (
 	"fmt"
+	"math"
 )
 
 // Основные константы, необходимые для расчетов.
@@ -103,7 +104,7 @@ const (
 func WalkingSpentCalories(action int, duration, weight, height float64) float64 {
 	// ваш код здесь
 	walkingSpeed := int(meanSpeed(action, duration))
-	squared := mat.Pow(int(walkingSpeed))
+	squared := math.Pow(int(walkingSpeed))
 	caloriesWalking := (walkingCaloriesWeightMultiplier*weight + (squared/height)*walkingSpeedHeightMultiplier*weight) * duration * minInH
 	return caloriesWalking
 }
